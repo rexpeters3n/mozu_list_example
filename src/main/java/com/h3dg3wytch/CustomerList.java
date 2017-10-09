@@ -14,45 +14,61 @@ import java.util.Properties;
 
 public class CustomerList {
 
+    private static final String CONFIG_PROPERTIES = "config.properties";
+
     private static Properties properties;
+    private static CustomerAccountResource customerAccountResource;
 
-    public static void main(String[] args) {
-
+    public static void run(){
         setUp();
-
-        AppAuthInfo appAuthInfo = new AppAuthInfo();
-
-        //Setup the key
-        appAuthInfo.setApplicationId(properties.getProperty("application_id"));
-        appAuthInfo.setSharedSecret(properties.getProperty("secret_key"));
-
-        AppAuthenticator.initialize(appAuthInfo);
-
-        int tenantId =  Integer.parseInt(properties.getProperty("tenant_id"));
-        int siteId= Integer.parseInt(properties.getProperty("site_id"));
-
-        MozuApiContext apiContext = new MozuApiContext(tenantId, siteId);
-
-        CustomerAccountResource resource = new CustomerAccountResource(apiContext);
-
-        try{
-            System.out.println("Number of Customer Accounts: " + resource.getAccounts().getTotalCount());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
+        authenicateAppplicationToApi();
+        createCustomerAccountResource();
+        getTotalNumberOfCustomers();
     }
+
+    private static void createCustomerAccountResource() {
+        customerAccountResource = new CustomerAccountResource(createMoziApiContext());
+    }
+
 
     public static void setUp(){
         properties = new Properties();
+        loadConfigurationProperties();
+    }
+
+    private static void loadConfigurationProperties() {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        try(InputStream resourceStream = loader.getResourceAsStream("config.properties")){
+        try(InputStream resourceStream = loader.getResourceAsStream(CONFIG_PROPERTIES)){
             properties.load(resourceStream);
         }catch (FileNotFoundException e){
             System.out.println("ERROR: Config file not found! Please include in project!");
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private static void getTotalNumberOfCustomers() {
+        try{
+            System.out.println("Number of Customer Accounts: " + customerAccountResource.getAccounts().getTotalCount());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static MozuApiContext createMoziApiContext() {
+        int tenantId =  Integer.parseInt(properties.getProperty("tenant_id"));
+        int siteId= Integer.parseInt(properties.getProperty("site_id"));
+        return new MozuApiContext(tenantId, siteId);
+
+    }
+
+    public static void authenicateAppplicationToApi(){
+        AppAuthInfo appAuthInfo = new AppAuthInfo();
+        //Setup the key
+        appAuthInfo.setApplicationId(properties.getProperty("application_id"));
+        appAuthInfo.setSharedSecret(properties.getProperty("secret_key"));
+        AppAuthenticator.initialize(appAuthInfo);
+
     }
 
     public static Properties getProperties() {
