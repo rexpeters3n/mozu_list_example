@@ -23,7 +23,7 @@ public class CustomerList {
         AppAuthInfo appAuthInfo = new AppAuthInfo();
 
         //Setup the key
-        appAuthInfo.setApplicationId("rex_petersen");
+        appAuthInfo.setApplicationId(properties.getProperty("application_id"));
         appAuthInfo.setSharedSecret(properties.getProperty("secret_key"));
 
         AppAuthenticator.initialize(appAuthInfo);

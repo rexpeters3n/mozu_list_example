@@ -20,6 +20,7 @@ public class PropertiesLoad {
         assert properties.getProperty("secret_key").equals("a1913003d89647008fd742d232e9fcd1");
         assert properties.getProperty("tenant_id").equals("23839");
         assert properties.getProperty("site_id").equals("35388");
+
     }
 
 }
