@@ -1,0 +1,6 @@
+config.properties
+idea/
+.gradle/
+.idea/
+out/
+build/

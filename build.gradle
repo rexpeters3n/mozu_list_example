@@ -1,0 +1,21 @@
+group 'com.h3dg3wytch'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'com.mozu', name: 'mozu-api-core', version: '1.24.11'
+    compile  ('com.mozu:mozu-api-java:1.19.8') {
+        exclude group: 'javax.sql'
+        exclude group: 'javax.transaction'
+        exclude group: 'jcs'
+        exclude group: 'javax.servlet'
+    }
+}
